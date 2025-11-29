@@ -1,36 +1,27 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Factories;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-class DatabaseSeeder extends Seeder
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ */
+class UserFactory extends Factory
 {
-    use WithoutModelEvents;
+    protected $model = User::class;
 
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
+    public function definition(): array
     {
-        // User::factory(10)->create();
-
-        // Create Super Admin
-        User::factory()->create([
-            'name' => 'Mehmet Sindi',
-            'email' => 'mehmet@example.com', // Assuming email, user can change
-            'password' => bcrypt('password'),
-            'is_super_admin' => true,
-        ]);
-
-        // Create Test User
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
-        $this->call(TaskSeeder::class);
+        return [
+            'name' => $this->faker->name(),                    // fake() → $this->faker
+            'email' => $this->faker->unique()->safeEmail(),    // fake() → $this->faker
+            'email_verified_at' => now(),
+            'password' => bcrypt('password'), // ya da Hash::make('password')
+            'remember_token' => Str::random(10),
+            'is_super_admin' => false,
+        ];
     }
 }

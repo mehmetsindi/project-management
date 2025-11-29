@@ -9,39 +9,25 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
     protected static ?string $password;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'two_factor_secret' => null,
+            'name'                   => 'Default User',
+            'email'                  => 'user@example.com',
+            'email_verified_at'      => now(),
+            'password'               => static::$password ??= Hash::make('password'),
+            'two_factor_secret'      => null,
             'two_factor_recovery_codes' => null,
-            'remember_token' => Str::random(10),
-            'profile_photo_path' => null,
-            'current_team_id' => null,
+            'remember_token'         => Str::random(10),
+            'profile_photo_path'     => null,
+            'current_team_id'        => null,
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
@@ -49,9 +35,23 @@ class UserFactory extends Factory
         ]);
     }
 
-    /**
-     * Indicate that the user should have a personal team.
-     */
+    public function superAdmin(): static
+    {
+        return $this->state([
+            'name'            => 'Mehmet Sindi',
+            'email'           => 'mehmet@example.com',
+            'is_super_admin'  => true,
+        ]);
+    }
+
+    public function testUser(): static
+    {
+        return $this->state([
+            'name'  => 'Test User',
+            'email' => 'test@example.com',
+        ]);
+    }
+
     public function withPersonalTeam(?callable $callback = null): static
     {
         if (! Features::hasTeamFeatures()) {
@@ -61,7 +61,7 @@ class UserFactory extends Factory
         return $this->has(
             Team::factory()
                 ->state(fn (array $attributes, User $user) => [
-                    'name' => $user->name.'\'s Team',
+                    'name' => $user->name . "'s Team",
                     'user_id' => $user->id,
                     'personal_team' => true,
                 ])

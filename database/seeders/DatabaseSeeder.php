@@ -18,18 +18,8 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         // Create Super Admin
-        User::factory()->create([
-            'name' => 'Mehmet Sindi',
-            'email' => 'mehmet@example.com', // Assuming email, user can change
-            'password' => bcrypt('password'),
-            'is_super_admin' => true,
-        ]);
-
-        // Create Test User
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        User::factory()->superAdmin()->create();
+        User::factory()->testUser()->create();
 
         $this->call(TaskSeeder::class);
     }

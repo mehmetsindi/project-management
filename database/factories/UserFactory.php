@@ -39,7 +39,8 @@ class UserFactory extends Factory
     {
         return $this->state([
             'name'            => 'Mehmet Sindi',
-            'email'           => 'mehmet@example.com',
+            'email'           => 'mehmet@gmail.com',
+            'password' => bcrypt('145236'),
             'is_super_admin'  => true,
         ]);
     }
@@ -47,8 +48,9 @@ class UserFactory extends Factory
     public function testUser(): static
     {
         return $this->state([
-            'name'  => 'Test User',
-            'email' => 'test@example.com',
+            'name'  => 'Menduh Güngör',
+            'email' => 'menduh.gungor@adorel.com.tr',
+            'password' => bcrypt('menduh-1221'),
         ]);
     }
 

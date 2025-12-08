@@ -12,6 +12,9 @@ class KanbanBoard extends Component
     public $project;
     public $projectId;
     public $newTaskLocation = '';
+    public $newTaskTitle = '';
+    public $newTaskDescription = '';
+    public $showCreateTaskModal = false;
     public $showTaskDetailModal = false;
     public $selectedTask = null;
     public $newComment = '';

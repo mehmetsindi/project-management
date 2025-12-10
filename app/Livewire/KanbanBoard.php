@@ -29,6 +29,13 @@ class KanbanBoard extends Component
     public $availableRates = [];
     public $selectedCarrier = '';
 
+    public function getListeners()
+    {
+        return [
+            "echo-private:projects.{$this->projectId},TaskUpdated" => '$refresh',
+        ];
+    }
+
     public function mount($project = null)
     {
         if ($project) {

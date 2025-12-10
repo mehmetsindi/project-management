@@ -10,6 +10,8 @@ class Project extends Model
         'name',
         'description',
         'created_by',
+        'budget',
+        'currency',
     ];
 
     public function users()
@@ -25,5 +27,20 @@ class Project extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
     }
 }

@@ -19,6 +19,7 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use \Spatie\Permission\Traits\HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +31,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_super_admin',
+        'department_id',
     ];
 
     /**
@@ -80,5 +82,22 @@ class User extends Authenticatable
     public function isSuperAdmin()
     {
         return $this->is_super_admin;
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class);
+    }
+
+    public function meetings()
+    {
+        return $this->belongsToMany(Meeting::class, 'meeting_user')
+            ->withPivot('status')
+            ->withTimestamps();
     }
 }

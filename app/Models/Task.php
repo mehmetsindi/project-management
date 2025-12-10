@@ -17,11 +17,26 @@ class Task extends Model
         'location',
         'latitude',
         'longitude',
+        'attributes',
+        'recurrence_pattern',
+        'meeting_id',
     ];
 
     protected $casts = [
         'due_date' => 'datetime',
+        'attributes' => 'array',
     ];
+
+    protected static function booted()
+    {
+        static::saved(function ($task) {
+            \App\Events\TaskUpdated::dispatch($task);
+        });
+
+        static::deleted(function ($task) {
+            \App\Events\TaskUpdated::dispatch($task);
+        });
+    }
 
     public function assignee()
     {
@@ -51,5 +66,31 @@ class Task extends Model
     public function shipment()
     {
         return $this->hasOne(Shipment::class);
+    }
+
+    public function dependencies()
+    {
+        return $this->belongsToMany(Task::class, 'task_dependencies', 'task_id', 'depends_on_task_id')
+            ->withPivot('type')
+            ->withTimestamps();
+    }
+
+    public function dependents()
+    {
+        return $this->belongsToMany(Task::class, 'task_dependencies', 'depends_on_task_id', 'task_id')
+            ->withPivot('type')
+            ->withTimestamps();
+    }
+
+    public function isBlocked()
+    {
+        // A task is blocked if any of its dependencies are NOT completed (status != 'done')
+        // This is a simple logic, can be expanded based on 'type' (finish_to_start, etc.)
+        return $this->dependencies()->where('status', '!=', 'done')->exists();
+    }
+
+    public function meeting()
+    {
+        return $this->belongsTo(Meeting::class);
     }
 }

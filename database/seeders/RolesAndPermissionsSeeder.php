@@ -53,6 +53,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'name' => 'Engineering',
             'description' => 'Software development and IT operations',
         ]);
+        
 
         $marketing = \App\Models\Department::create([
             'name' => 'Marketing',
